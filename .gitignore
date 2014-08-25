@@ -5,3 +5,7 @@
 *.un~
 
 *.class
+*.iml
+*.name
+*.xml
+*.html
