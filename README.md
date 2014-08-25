@@ -29,4 +29,13 @@ Math Logic course
 Operating Systems course
 ------------------------
 1. simple example on `fork`, `exec`, `read`, `write` and other basic *system calls*
-2. *chmod* utility 
+2. *chmod* utility
+
+more information can be found here: http://oxij.org/activity/itmo/os/
+
+Parsing Course
+--------------
+1. Implementation of Top Down parser for *LL(1)-grammar* -- postfix notation
+..* Using Structure graphic for tree visualization: https://code.google.com/p/structure-graphic/ 
+..* Using ANTLR4 and JUnit4 for tree testingW
+2. Implementation of Top Down parser for postfix notation and java language subset using ANTLR4 
