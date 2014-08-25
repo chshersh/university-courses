@@ -3,3 +3,5 @@
 *.exe
 
 *.un~
+
+*.class
