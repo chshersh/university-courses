@@ -36,6 +36,6 @@ more information can be found here: http://oxij.org/activity/itmo/os/
 Parsing Course
 --------------
 1. Implementation of Top Down parser for *LL(1)-grammar* -- postfix notation
-..* Using Structure graphic for tree visualization: https://code.google.com/p/structure-graphic/ 
-..* Using ANTLR4 and JUnit4 for tree testingW
-2. Implementation of Top Down parser for postfix notation and java language subset using ANTLR4 
+..1. Using Structure graphic for tree visualization: https://code.google.com/p/structure-graphic/ 
+..2. Using ANTLR4 and JUnit4 for tree testing
+2. Implementation of Top Down parser for postfix notation and java language subset using ANTLR4 with code autoformatting 
