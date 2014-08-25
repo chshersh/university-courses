@@ -1,0 +1,141 @@
+// code on pseudohaskell with python and java
+
+data FileType = Pipe | Device
+data SyscallTag = OpenTag | ReadTag | WriteTag | CloseTag 
+                  | DeviceFinishedTag /*when device finishes writeing or readin, it throws this interrupt*/
+data SyscallArgs = [Argument] // universal type for all arguments
+
+
+FdId = {
+    t : FileType
+    mode : FileMode
+    buf : RingBuffer // pointer in memory
+    id : DevId
+    blocks : List<DiskBlock>
+}    
+
+Proccess = {
+    function execute : SyscallResult -> Context
+    pid : Integer
+    fdTable : Map<Int, FdID> 
+}
+
+Context = {
+    tag : SyscallTag
+    args : SyscallArgs
+    cont : Proccess
+}
+
+Runnable = {
+    proccess : Proccess
+    res : SyscallResult
+}
+
+DevicePort = {
+    function sendMessage : (DevId, FileMode, Queue<BlockNo>, Pointer) -> () // throws Interrupt on finishing
+}
+
+Device = {
+    blockSize : Int
+    port : DevicePort
+    
+    function MMU : VirtualAddress -> RealAddress 
+    function getQueueOfBlocksBySize : Int -> Queue<BlockNo>
+    function getFreeBlock : () -> BlockNo
+    
+    function msgCreate : (Int len, DevId id, FileMode m, Buffer buf) -> {
+        // buf is a pointer
+        RealAddress addr = MMU(buf)
+        if addr == NULL:
+            throw DEVICE_ALLOC_FINISHED_INTERRUPT("no memory")
+        if len <= blockSize:
+            BlockNo block = getFreeBlock()
+            port.sendMessage(id, m, block, addr)
+        else:
+            Queue<BlockNo> blocks = getQueueOfBlocksBySize(len)
+            device.port.sendMessage(id, m, blocks, addr)
+    }
+}
+
+kernel(MainRunnable): // MainRunnable is one main proccess
+    Device device = Device(somePort) 
+    
+    var runnable = List<Runnable>()
+    runnable.add(MainRunnable)
+    
+    waiting = List<Proccess>() // list of proccess which are waiting for Device execution
+    
+    while runnable.hasElements() || waiting.hasElements():
+        if runnable.isEmpty():
+            // wait for waiting elements of write to complete
+            continue
+            
+        Runnable cur = runnable.popHead()
+        Proccess proc = cur.proccess
+        Context ctx = proc.execute(cur.res)
+        
+        switch tag ctx:
+            case OpenTag -> { // SyscallArgs = ["/p/a/t/h", mode], mode = R | W
+                // get file from system tree ans set file mode
+                // if file doesn't exist and mode == W, then we create new file, device file for example
+                // or if we want to create pipe, we should pass file type
+                FdId file = FileSystem.getFile(ctx.args[0], ctx.args[1])         
+                if file == NULL: // mode == R and file doesn't exist
+                    runnable.add(Runnable(ctx.cont, CANT_OPEN_FOR_READING))
+                else:
+                    Int fd = new_fd()
+                    proc.fdTable.put(fd, file)
+                    runnable.add(Runnable(ctx.cont, fd))
+            }
+            case ReadTag -> { // SyscallArgs = [fd, buf, len]
+                fd, buf, len = ctx.args // extract arguments
+                if !proc.fdTable.contains(fd):
+                    runnable.add(Runnable(ctx.cont, NO_SUCH_FILE))
+                    
+                FdId file = proc.fdTable.get(fd)
+                if file.mode != R:
+                    runnable.add(Runnable(ctx.cont, FILE_DOESNT_SUPPORT_READING)
+                    
+                if file.type == Pipe:
+                    // TODO
+                else: // file.type == Device
+                    device.msgCreate(len, file.id, "R", buf) 
+                    waiting.add(ctx.proc)   
+            }
+            case WriteTag -> { // SyscallArgs = [fd, buf, len]
+                fd, buf, len = ctx.args // extract arguments
+                if !proc.fdTable.contains(fd):
+                    runnable.add(Runnable(ctx.cont, NO_SUCH_FILE))
+                    
+                FdId file = proc.fdTable.get(fd)
+                if file.mode != W:
+                    runnable.add(Runnable(ctx.cont, FILE_DOESNT_SUPPORT_WRITING)
+                    
+                if file.type == Pipe:
+                    // TODO
+                else: // file.type == Device
+                    // if device.totalMemory < len: ignore this, assume that HD has infinite memory
+                    device.msgCreate(len, file.id, "W", buf)
+                    waiting.add(ctx.proc)
+            }
+            case CloseTag -> { // SyscallArgs = [fd]
+                fd = ctx.args[0]
+                if proc.fdTable.contains(fd):
+                    proc.fdTable.remove(fd)
+                    runnable.add(Runnable(ctx.cont, OK)) // 0 means that file closed correctly
+                else:
+                    // error: no such file
+                    runnable.add(Runnable(ctx.cont, NO_SUCH_FILE)) // 1 means that file close with error
+            }
+            case DeviceFinishedTag -> { 
+            // SyscallWriteArgs = [file, byteWritten, buf, deviceOperationMode, actualLen, pid, RET_CODE = ERROR_CODE | SUC_CODE]
+                ... = ctx.SyscallArgs // same arguments names
+                Proccess waitingProc = waiting.getByPid(pid)
+                if bytesWritten < actualLen:
+                    // assume as a pointer
+                    device.msgCreate(actualLen - byteWritten, file.id, deviceOperationMode, buf + bytesWritten)
+                else:
+                    waiting.remove(waitingProc)
+                    runnable.add(Runnable(waitingProc, RET_CODE))        
+            }
+            

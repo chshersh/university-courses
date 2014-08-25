@@ -22,6 +22,11 @@ some tasks from here: http://www.kgeorgiy.info/courses/java-advanced/
 
 Math Logic course
 -----------------
-1. Checks correctness of proof, using axioms and Modus Ponens rule
+1. Checks correctness of proof, using *axioms* and *Modus Ponens* rule
 2. Transform proof using *deduction theorem*
 3. Checks if expression is tautology and build proof for this expression using *completeness theorem*
+
+Operating Systems course
+------------------------
+1. simple example on `fork`, `exec`, `read`, `write` and other basic *system calls*
+2. *chmod* utility 
