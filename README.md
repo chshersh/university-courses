@@ -20,4 +20,7 @@ some tasks from here: http://www.kgeorgiy.info/courses/java-intro/
 ### 4th term
 some tasks from here: http://www.kgeorgiy.info/courses/java-advanced/
 
-
+Math Logic course
+1. Checks correctness of proof, using axioms and Modus Ponens rule
+2. Transform proof using *deduction theorem*
+3. Checks if expression is tautology and build proof for this expression using *completeness theorem*
