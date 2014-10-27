@@ -12,6 +12,9 @@ C++ course
 2. implementation of *big_integer* class
 3. *quickhull* algorithm
 4. *persistent binary tree* with **shared_ptr** 
+5. Hoard memory allocator, based on this article: http://people.cs.umass.edu/~emery/pubs/berger-asplos2000.pdf
+
+basic structures are taken from here: https://github.com/sorokin/malloc-intercept
 
 Java course
 -----------
