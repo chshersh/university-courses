@@ -42,3 +42,8 @@ Parsing Course
   * Using Structure graphic for tree visualization: https://code.google.com/p/structure-graphic/ 
   * Using ANTLR4 and JUnit4 for tree testing
 2. Implementation of Top Down parser for postfix notation and java language subset using ANTLR4 with code autoformatting 
+
+Optimization course
+-------------------
+1. one_dim.jl : one dimensional optimization methods - ternary, dichotomy, golden section, fibonacci, uniform sequential, polyline
+2. grad.jl : two dimensional - gradient descent
