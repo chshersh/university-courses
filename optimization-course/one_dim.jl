@@ -130,7 +130,7 @@ function uniformSequenceSearch(f, left, right, n::Int64, ɛ)
   callCnt, ls, rs, rels = 0, [left], [right], [1.0]
 
   while right - left > ɛ
-    fs = [f(left + i * (right - left) / (n + 1)) for i in 0:n]
+    fs = [f(left + i * (right - left) / n) for i in 0:n]
     minval, j = fs[1], 1
     for i in 2:length(fs)
       if minval > fs[i]
