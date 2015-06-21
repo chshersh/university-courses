@@ -47,3 +47,13 @@ Optimization course
 -------------------
 1. one_dim.jl : one dimensional optimization methods - ternary, dichotomy, golden section, fibonacci, uniform sequential, polyline
 2. grad.jl : two dimensional - gradient descent
+
+ML course
+---------
+1. KNN: implementation of k-nearest-neighbours algorithm
+2. Bayes: bayes naive classifier in spam detection
+3. SVM: support vector machine implementation
+  * SMO solution based on: http://cs229.stanford.edu/materials/smo.pdf
+4. Regression: predict cost of house by number of rooms and total square
+5. RecSys: Recommendation system: predict user ratings to other films
+  * Task from here: https://inclass.kaggle.com/c/itmo-year2011-ml-recsys-track-1
