@@ -1,0 +1,79 @@
+Герасимов Дмитрий, 4538
+
+Students(0, 'Dima').
+Students(1, 'Andrew').
+Students(2, 'Ivan').
+Students(3, 'Lena').
+Students(4, 'Fyodor').
+
+Courses (0, 'Databases').
+Courses (1, 'Physics').
+Courses (2, 'Type theory').
+
+Groups(0, '1538').
+Groups(1, '1539').
+Groups(2, '1234').
+
+Lecturers(0, 'Korneev').
+Lecturers(1, 'Stankevich').
+
+Schedule(0, 0, 0).
+Schedule(0, 1, 1).
+Schedule(0, 2, 1).
+Schedule(1, 0, 0).
+Schedule(1, 1, 1).
+Schedule(1, 2, 0).
+Schedule(2, 1, 0).
+
+GroupAssignments(0, 0).
+GroupAssignments(1, 1).
+GroupAssignments(2, 1).
+GroupAssignments(3, 0).
+GroupAssignments(4, 2).
+
+Marks(0, 0, 4).
+Marks(0, 1, 5).
+Marks(0, 2, 4).
+Marks(1, 0, 4).
+Marks(2, 0, 5).
+
+#
+
+PossibleMarks(1).
+PossibleMarks(2).
+PossibleMarks(3).
+PossibleMarks(4).
+PossibleMarks(5).
+
+# 1. Заданная оценка - M
+Task1(SId) :- Marks(SId, DB, M), Courses(DB, 'Databases').
+
+# 2a.
+Task2a(SId) :- Students(SId, _), PossibleMarks(M), not Marks(SId, DB, M), Courses(DB, 'Databases').
+
+# 2b.
+HaveDB(SId) :- GroupAssignments(SId, GId), Schedule(GId, CId, _), Courses(CId, 'Databases').
+Task2b(SId) :- HaveDB(SId), Task2a(SId).
+
+# 3. Заданное имя лектора — LName
+Task3(SId) :- Marks(SId, CId, _), GroupAssignments(SId, GId), Schedule(GId, CId, LId), Lecturers(LId, LName).
+
+# 4.
+Task4(SId) :- Students(SId, _), not Task3(SId).
+
+# 5. Заданное имя лектора — LName
+
+Task5Aux(SId) :- Students(SId, _), GroupAssignments(SId, GId), Schedule(GId, CId, LId), Lecturers(LId, LName), not Marks(SId, CId, M), PossibleMarks(M).
+Task5(SId) :- Students(SId, _), not Task5Aux(SId).
+
+# 6.
+Task6(SName, CName) :- Students(SId, SName), GroupAssignments(SId, GId), Schedule(GId, CId, _), Courses(CId, CName).
+
+# 7.
+Task7(LName, SName) :- Students(SId, SName), GroupAssignments(SId, GId), Schedule(GId, _, LId), Lecturers(LId, LName).
+
+# 8.
+
+AllPairs(SId1, SId2) :- Students(SId1, _), Students(SId2, _).
+BadPairs(SId1, SId2) :- Marks(SId1, CId, _), Students(SId2, _), not Marks(SId2, CId, M), PossibleMarks(M).
+Task8(SId1, SId2) :- AllPairs(SId1, SId2), not BadPairs(SId1, SId2).

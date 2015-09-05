@@ -11,7 +11,7 @@ C++ course
 1. *map* of strings using polynomial hash implemented on asm
 2. implementation of *big_integer* class
 3. *quickhull* algorithm
-4. *persistent binary tree* with **shared_ptr** 
+4. *persistent binary tree* with **shared_ptr**
 5. Hoard memory allocator, based on this article: http://people.cs.umass.edu/~emery/pubs/berger-asplos2000.pdf
 
 basic structures are taken from here: https://github.com/sorokin/malloc-intercept
@@ -39,9 +39,9 @@ more information can be found here: http://oxij.org/activity/itmo/os/
 Parsing Course
 --------------
 1. Implementation of Top Down parser for *LL(1)-grammar* -- postfix notation
-  * Using Structure graphic for tree visualization: https://code.google.com/p/structure-graphic/ 
+  * Using Structure graphic for tree visualization: https://code.google.com/p/structure-graphic/
   * Using ANTLR4 and JUnit4 for tree testing
-2. Implementation of Top Down parser for postfix notation and java language subset using ANTLR4 with code autoformatting 
+2. Implementation of Top Down parser for postfix notation and java language subset using ANTLR4 with code autoformatting
 
 Optimization course
 -------------------
@@ -57,3 +57,7 @@ ML course
 4. Regression: predict cost of house by number of rooms and total square
 5. RecSys: Recommendation system: predict user ratings to other films
   * Task from here: https://inclass.kaggle.com/c/itmo-year2011-ml-recsys-track-1
+
+SQL Databases course
+--------------------
+Tasks: http://www.kgeorgiy.info/courses/dbms/homeworks.html#homework-1

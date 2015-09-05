@@ -1,0 +1,79 @@
+Герасимов Дмитрий, 4538
+
+# 1. Заданная оценка - M
+Students
+where
+exists CC : Courses,
+  CC.CName = 'Databases' and
+  (exists MM : Marks, SId = MM.SId and M = MM.Mark and CC.CId = MM.CId).
+
+# 2a.
+Students
+where
+not exists CC : Courses,
+  CC.CName = 'Databases' and
+  (exists MM : Marks, SId = MM.SId and CC.CId = MM.CId).
+
+# 2b.
+Students
+where
+(not exists CC : Courses,
+  CC.CName = 'Databases' and
+  (exists MM : Marks,
+    SId = MM.SId and
+    CC.CId = MM.CId)) and
+(exists GA : GroupAssignments, SS : Schedule, GA.SId = SId and GA.GId = SS.GId and SS.CId = CC.CId).
+
+# 3. Заданное имя лектора — LName
+Students
+where
+exists MM : Marks, SS : Schedule, LL : Lecturers, GG : GroupAssignments,
+  MM.SId = SId and MM.CId = SS.CId and
+  GG.SId = SId and GG.GId = SS.GId and
+  SS.LId = LL.LId and
+  LL.LName = LName.
+
+# 4.
+Students
+where
+not (exists MM : Marks, SS : Schedule, LL : Lecturers, GG : GroupAssignments,
+       MM.SId = SId and MM.CId = SS.CId and
+       GG.SId = SId and GG.GId = SS.GId and
+       SS.LId = LL.LId and
+       LL.LName = LName).
+
+# 5. Заданное имя лектора — LName
+Students
+where
+exists LL : Lecturers,
+  LL.LName = LName and
+  (forall GG : GroupAssignments, SS : Schedule, MM : Marks,
+     (GG.SId = SId and GG.GId = SS.GId and SS.LId = LL.LId) implies (SS.CId = MM.CId and MM.SId = SId)).
+                                       ).
+
+# 6.
+select Students.SName, Courses.CName
+from Students, Courses
+where
+exists S : Students, GG : GroupAssignments, SS : Schedule, CC : Courses,
+  S.SId = GG.SId and
+  GG.GId = SS.GId and
+  SS.CId = CC.CId.
+
+# 7.
+select Lecturers.LName, Students.SName
+from Lecturers, Students
+where
+exists S : Students, GG : GroupAssignments, SS : Schedule, LL : Lecturers,
+  S.SId = GG.SId and
+  GG.GId = SS.GId and
+  SS.LId = LL.LId.
+
+# 8.
+select Students1.SId, Students1.SId
+from Students1, Students2
+where
+forall M1 : Marks,
+  M1.SId = Students1.SId implies
+  (exists M2 : Marks,
+     M2.CId = M1.CId and M2.SId = Students2.SId).

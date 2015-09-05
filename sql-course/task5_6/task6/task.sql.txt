@@ -1,0 +1,188 @@
+Герасимов Дмитрий, 4538
+
+drop database dekanat;
+create database dekanat;
+use dekanat;
+create table Students (
+  SId int,
+  SName varchar(30),
+  primary key (SId)
+);
+create table Courses (
+  CId int,
+  CName varchar(30),
+  primary key (CId)
+);
+create table Groups (
+  GId int,
+  GName varchar(5),
+  primary key (GId)
+);
+create table Lecturers (
+  LId int,
+  LName varchar(30),
+  primary key (LId)
+);
+create table GroupAssignments (
+  SId int,
+  GId int,
+  primary key (SId)
+);
+create table Schedule (
+  GId int,
+  CId int,
+  LId int,
+  primary key (GId, CId)
+);
+create table Marks (
+  SId int,
+  CId int,
+  Mark int,
+  primary key (SId, CId)
+);
+
+insert into Students value (0, 'Dima');
+insert into Students value (1, 'Andrew');
+insert into Students value (2, 'Ivan');
+insert into Students value (3, 'Lena');
+insert into Students value (4, 'Fyodor');
+
+insert into Courses value (0, 'Databases');
+insert into Courses value (1, 'Physics');
+insert into Courses value (2, 'Type theory');
+
+insert into Groups value (0, '1538');
+insert into Groups value (1, '1539');
+insert into Groups value (2, '1234');
+
+insert into Lecturers value (0, 'Korneev');
+insert into Lecturers value (1, 'Stankevich');
+
+insert into Schedule value (0, 0, 0);
+insert into Schedule value (0, 1, 1);
+insert into Schedule value (0, 2, 1);
+insert into Schedule value (1, 0, 0);
+insert into Schedule value (1, 1, 1);
+insert into Schedule value (1, 2, 0);
+insert into Schedule value (2, 1, 0);
+
+insert into GroupAssignments value (0, 0);
+insert into GroupAssignments value (1, 1);
+insert into GroupAssignments value (2, 1);
+insert into GroupAssignments value (3, 0);
+insert into GroupAssignments value (4, 2);
+
+insert into Marks value (0, 0, 4);
+insert into Marks value (0, 1, 5);
+insert into Marks value (0, 2, 4);
+insert into Marks value (1, 0, 4);
+insert into Marks value (2, 0, 5);
+
+# 1 Заданная оценка — 4
+select SId from Students, Courses
+where
+Courses.CName = "Databases" and
+(exists
+  (select * from Marks
+   where
+   Students.SId = Marks.SId and
+   4 = Marks.Mark and
+   Courses.CId = Marks.CId));
+
+# 2 a 
+Select SId from Students
+where
+not exists
+  (select * from Courses
+   where
+   Courses.CName = "Databases" and
+   (exists
+      (select * from Marks
+       where
+       Students.SId = Marks.SId and
+       Courses.CId = Marks.CId)));
+
+# 2 b
+Select SId from Students
+where
+not exists
+  (select * from Courses
+   where
+   Courses.CName = "Databases" and
+   (exists
+      (select * from Marks where Students.SId = Marks.SId and Courses.CId = Marks.CId)) and
+      (exists
+        (select * from GroupAssignments
+         where
+         exists
+           (select * from Schedule
+            where
+            GroupAssignments.SId = Students.SId and
+            GroupAssignments.GId = Schedule.GId and
+            Schedule.CId = Courses.CId))));
+
+# 3 Заданное имя лектора — "Stankevich"
+select Students.SId from Students, Marks, Schedule, Lecturers, GroupAssignments
+where
+Marks.SId = Students.SId and Marks.CId = Schedule.CId and
+GroupAssignments.SId = Students.SId and GroupAssignments.GId = Schedule.GId and
+Schedule.LId = Lecturers.LId and
+Lecturers.LName = Lecturers.LId;
+
+# 4 Заданное имя лектора — "Stankevich"
+select Students.SId from Students
+where
+not exists
+  (select * from Marks, Schedule, Lecturers, GroupAssignments
+   where
+   Marks.SId = Students.SId and Marks.CId = Schedule.CId and
+   GroupAssignments.SId = Students.SId and GroupAssignments.GId = Schedule.GId and
+   Schedule.LId = Lecturers.LId and
+   Lecturers.LName = "Stankevich");
+
+# 5 Заданное имя лектора — Korneev
+select Students.SId from Students, Lecturers
+where
+Lecturers.LName = "Korneev" and
+not exists
+  (select * from GroupAssignments, Schedule, Marks
+   where
+   not
+     (not 
+        (GroupAssignments.SId = Students.SId and
+         GroupAssignments.GId = Schedule.GId and
+         Schedule.LId = Lecturers.LId)
+      or
+        (Schedule.CId = Marks.CId and 
+         Marks.SId = Students.SId)));
+
+# 6
+select Students.SName, Courses.CName
+from Students, Courses, GroupAssignments, Schedule
+where
+Students.SId = GroupAssignments.SId and
+GroupAssignments.GId = Schedule.GId and
+Schedule.CId = Courses.CId;
+
+# 7
+select Lecturers.LName, Students.SName
+from Students, Lecturers, GroupAssignments, Schedule
+where
+Students.SId = GroupAssignments.SId and
+GroupAssignments.GId = Schedule.GId and
+Schedule.LId = Lecturers.LId;
+
+# 8
+select S1.SId, S2.SId
+from Students as S1, Students as S2
+where
+not exists
+  (select * from Marks as M1
+   where
+   not
+     (not M1.SId = S1.SId
+      or
+      (exists
+        (select * from Marks as M2
+         where
+         M2.CId = M1.CId and M2.SId = S2.SId))));
