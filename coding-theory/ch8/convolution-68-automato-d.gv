@@ -1,0 +1,19 @@
+digraph G {
+    edge[arrowhead="vee"];
+    node[shape="circle"];
+    
+    v_1[label="0"];
+    { rank=same; v_3[label="1"]; v_2[label="2"]; }
+    v_4[label="3"];
+
+    v_1 -> v_2[label=<D<SUP>3</SUP>I>];
+
+    v_2 -> v_3[label=<D<SUP>2</SUP>>];
+    v_2 -> v_4[label=<DI>];
+
+    v_3 -> v_1[label=<D<SUP>3</SUP>>];
+    v_3 -> v_2[label=<I>];
+
+    v_4 -> v_3[label=<D>];
+    v_4 -> v_4[label=<D<SUP>2</SUP>I>];
+}

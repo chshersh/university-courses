@@ -1,0 +1,48 @@
+digraph G {
+    edge[arrowhead="vee"];
+
+    { rank=same;
+        u[label="", fixedsize="false", width=0, height=0, shape=none];
+        d_1[shape="point"]
+        m_1[shape="square";label=""];
+        d_2[shape="point"]
+        m_2[shape="square";label=""];
+        d_3[shape="point"]   
+    }
+
+    { rank=same;
+        s_1[shape="circle";label="+"];
+        s_2[shape="circle";label="+"];
+        s_3[shape="circle";label="+"];
+
+        s_1 -> s_2[style=invis];
+        s_2 -> s_3[style=invis];
+    }
+
+    { rank=same;
+        v_1[label="", fixedsize="false", width=0, height=0, shape=none];
+        v_2[label="", fixedsize="false", width=0, height=0, shape=none];
+        v_3[label="", fixedsize="false", width=0, height=0, shape=none];
+    }
+
+    u -> d_1[arrowhead=none, label="u"];
+    d_1 -> m_1;
+    m_1 -> d_2[arrowhead=none];
+    d_2 -> m_2;
+    m_2 -> d_3[arrowhead=none];
+
+    d_1 -> s_1;
+    d_1 -> s_2;
+    d_1 -> s_3;
+
+    d_2 -> s_1;
+    d_2 -> s_2;
+
+    d_3 -> s_1;
+    d_3 -> s_2;
+    d_3 -> s_3;
+
+    s_1 -> v_1[label=<v<SUB>1</SUB>>];
+    s_2 -> v_2[label=<v<SUB>2</SUB>>];
+    s_3 -> v_3[label=<v<SUB>3</SUB>>];
+}
